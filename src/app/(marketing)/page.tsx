@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Trust from "./_components/trust";
+import { SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-60px)] w-full">
-      <div className="flex flex-col-reverse md:flex-row items-center justify-center sm:gap-[25px] mb-[20px] md:mb-0">
+      <div className="flex flex-col-reverse h-[calc(100vh-60px)] md:flex-row items-center justify-center sm:gap-[25px] mb-[20px] md:mb-0">
         <div className="flex-1 flex flex-col justify-center p">
           <h1 className="text-4xl md:text-6xl font-extrabold">
             Smart pricing, Global Reach!
@@ -17,9 +19,20 @@ export default function Home() {
             on a sleek dashboard, and embed into your app in minutes. Join 100+
             businesses already pricing smarter!
           </p>
-          <Button className="mt-[30px] font-bold w-fit" size="lg">
-            Get started for free
-          </Button>
+
+          <SignedIn>
+            <Button className="mt-[30px] font-bold w-fit" size="lg" asChild>
+              <Link href="/dashboard">Go to Dashboard</Link>
+            </Button>
+          </SignedIn>
+
+          <SignedOut>
+            <SignUpButton>
+              <Button className="mt-[30px] font-bold w-fit" size="lg">
+                Get started for free
+              </Button>
+            </SignUpButton>
+          </SignedOut>
 
           <Trust />
         </div>
