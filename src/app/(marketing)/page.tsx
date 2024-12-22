@@ -3,11 +3,13 @@ import Image from "next/image";
 import Trust from "./_components/trust";
 import { SignUpButton, SignedIn, SignedOut } from "@clerk/nextjs";
 import Link from "next/link";
+import { subscriptionTiersInOrder } from "@/data/subscriptionTiers";
+import PricingCard from "./_components/pricing-card";
 
 export default function Home() {
   return (
     <div className="min-h-[calc(100vh-60px)] w-full">
-      <div className="flex flex-col-reverse h-[calc(100vh-60px)] md:flex-row items-center justify-center sm:gap-[25px] mb-[20px] md:mb-0">
+      <section className="flex flex-col-reverse min-h-[calc(100vh-60px)] h-full md:flex-row items-center justify-center sm:gap-[25px] mb-[20px] md:mb-0">
         <div className="flex-1 flex flex-col justify-center p">
           <h1 className="text-4xl md:text-6xl font-extrabold">
             Smart pricing, Global Reach!
@@ -52,7 +54,22 @@ export default function Home() {
             className="md:self-end"
           />
         </div>
-      </div>
+      </section>
+
+      <section
+        id="pricing"
+        className="px-1 sm:px-2 md:px-4 lg:px-8 py-16 mb-10"
+      >
+        <h2 className="text-4xl text-center text-balance font-bold mb-12">
+          Value-Packed Plans to Maximize Your Sales
+        </h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mx-auto">
+          {subscriptionTiersInOrder.map((tier) => (
+            <PricingCard key={tier.name} {...tier} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

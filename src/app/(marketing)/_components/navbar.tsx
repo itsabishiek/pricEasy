@@ -26,6 +26,7 @@ const Navbar: React.FC<NavbarProps> = () => {
 
         <div className="flex items-center gap-3">
           <SignedIn>
+            <Link href="/dashboard">Dashboard</Link>
             <UserButton />
           </SignedIn>
           <SignedOut>
