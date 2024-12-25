@@ -8,7 +8,7 @@ import PricingCard from "./_components/pricing-card";
 
 export default function Home() {
   return (
-    <div className="min-h-[calc(100vh-60px)] w-full">
+    <div className="min-h-[calc(100vh-60px)] w-full px-8">
       <section className="flex flex-col-reverse min-h-[calc(100vh-60px)] h-full md:flex-row items-center justify-center sm:gap-[25px] mb-[20px] md:mb-0">
         <div className="flex-1 flex flex-col justify-center p">
           <h1 className="text-4xl md:text-6xl font-extrabold">
