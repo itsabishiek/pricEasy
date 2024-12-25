@@ -1,12 +1,16 @@
 "use server";
 
-import { productDetailsSchema } from "@/schemas/products";
+import {
+  productCountryDiscountSchema,
+  productDetailsSchema,
+} from "@/schemas/products";
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import {
   createProduct as createProductDB,
   updateProduct as updateProductDB,
   deleteProduct as deleteProductDB,
+  updateCountryDiscounts as updateCountryDiscountsDB,
 } from "@/server/db/products";
 import { redirect } from "next/navigation";
 
@@ -68,4 +72,49 @@ export async function deleteProduct(productId: string) {
     error: !isSuccess,
     message: isSuccess ? "Successfully deleted your product" : errorMessage,
   };
+}
+
+export async function updateCountryDiscounts(
+  productId: string,
+  unsafeData: z.infer<typeof productCountryDiscountSchema>
+) {
+  const { userId } = await auth();
+  const { success, data } = productCountryDiscountSchema.safeParse(unsafeData);
+
+  if (!success || userId == null) {
+    return {
+      error: true,
+      message: "There was an error saving your country discounts",
+    };
+  }
+
+  const insert: {
+    countryGroupId: string;
+    productId: string;
+    coupon: string;
+    discountPercentage: number;
+  }[] = [];
+  const deleteIds: { countryGroupId: string }[] = [];
+
+  data.groups.forEach((group) => {
+    if (
+      group.coupon != null &&
+      group.coupon.length > 0 &&
+      group.discountPercentage != null &&
+      group.discountPercentage > 0
+    ) {
+      insert.push({
+        countryGroupId: group.countryGroupId,
+        coupon: group.coupon,
+        discountPercentage: group.discountPercentage,
+        productId,
+      });
+    } else {
+      deleteIds.push({ countryGroupId: group.countryGroupId });
+    }
+  });
+
+  await updateCountryDiscountsDB(deleteIds, insert, { productId, userId });
+
+  return { error: false, message: "Country discounts updated!" };
 }

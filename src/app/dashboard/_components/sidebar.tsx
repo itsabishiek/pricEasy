@@ -17,7 +17,7 @@ type SidebarProps = {};
 
 const Sidebar: React.FC<SidebarProps> = () => {
   return (
-    <aside className="h-[calc(100vh-60px)] sticky top-0 p-5 hidden md:flex flex-col justify-between border-r border-input">
+    <aside className="h-[calc(100vh-60px)] sticky top-[60px] p-5 hidden md:flex flex-col justify-between border-r border-input">
       <SidebarContents />
     </aside>
   );
@@ -33,8 +33,10 @@ export const SidebarContents = () => {
       <div className="flex flex-col gap-4">
         <Link
           href="/dashboard"
-          className={`flex items-center gap-4 cursor-pointer hover:bg-secondary p-3 rounded-md ${
-            pathname === "/dashboard" ? "bg-primary" : "bg-transparent"
+          className={`flex items-center gap-4 cursor-pointer p-3 rounded-md ${
+            pathname === "/dashboard"
+              ? "bg-primary hover:bg-primary/95"
+              : "bg-transparent hover:bg-secondary"
           }`}
         >
           <LayoutPanelLeft />
@@ -43,7 +45,9 @@ export const SidebarContents = () => {
         <Link
           href="/dashboard/products"
           className={`flex items-center gap-4 cursor-pointer hover:bg-secondary p-3 rounded-md ${
-            pathname === "/dashboard/products" ? "bg-primary" : "bg-transparent"
+            pathname === "/dashboard/products"
+              ? "bg-primary hover:bg-primary/95"
+              : "bg-transparent hover:bg-secondary"
           }`}
         >
           <Zap />
@@ -53,8 +57,8 @@ export const SidebarContents = () => {
           href="/dashboard/analytics"
           className={`flex items-center gap-4 cursor-pointer hover:bg-secondary p-3 rounded-md ${
             pathname === "/dashboard/analytics"
-              ? "bg-primary"
-              : "bg-transparent"
+              ? "bg-primary hover:bg-primary/95"
+              : "bg-transparent hover:bg-secondary"
           }`}
         >
           <ChartNoAxesCombined />
@@ -64,8 +68,8 @@ export const SidebarContents = () => {
           href="/dashboard/subscription"
           className={`flex items-center gap-4 cursor-pointer hover:bg-secondary p-3 rounded-md ${
             pathname === "/dashboard/subscription"
-              ? "bg-primary"
-              : "bg-transparent"
+              ? "bg-primary hover:bg-primary/95"
+              : "bg-transparent hover:bg-secondary"
           }`}
         >
           <Landmark />

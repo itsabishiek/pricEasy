@@ -53,7 +53,7 @@ const ProductCard = ({
   description?: string | null;
 }) => {
   return (
-    <Card className="dark:border-input">
+    <Card className="shadow-md dark:border-input">
       <CardHeader>
         <div className="flex gap-3">
           <div className="flex items-center justify-center border dark:border-input p-3 rounded-md">

@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@clerk/nextjs/server";
-import { getProduct } from "@/server/db/products";
+import { getProduct, getProductCountryGroups } from "@/server/db/products";
 import { notFound } from "next/navigation";
 import {
   Card,
@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ProductDetailsForm from "@/app/dashboard/_components/forms/product-details-form";
+import CountryDiscountForm from "@/app/dashboard/_components/forms/country-discount-form";
 
 type EditProductPageProps = {
   params: {
@@ -90,13 +91,15 @@ const DetailsTab = ({
   );
 };
 
-const CountriesTab = ({
+const CountriesTab = async ({
   productId,
   userId,
 }: {
   productId: string;
   userId: string;
 }) => {
+  const countryGroups = await getProductCountryGroups(productId, userId);
+
   return (
     <Card className="dark:border-input">
       <CardHeader>
@@ -107,7 +110,10 @@ const CountriesTab = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* <ProductDetailsForm product={product} /> */}
+        <CountryDiscountForm
+          productId={productId}
+          countryGroups={countryGroups}
+        />
       </CardContent>
     </Card>
   );
@@ -124,6 +130,10 @@ const CustomizationTab = ({
     <Card className="dark:border-input">
       <CardHeader>
         <CardTitle className="text-xl">Banner Customization</CardTitle>
+        <CardDescription>
+          Customize the banner style based on your website theme. You can also
+          style it yourself using CSS.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         {/* <ProductDetailsForm product={product} /> */}
