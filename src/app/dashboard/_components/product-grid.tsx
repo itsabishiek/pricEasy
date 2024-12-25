@@ -1,3 +1,4 @@
+import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,7 +11,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -18,7 +18,6 @@ import { Album, Ellipsis } from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import AddToSiteDialogContent from "./add-to-site-dialog-content";
-import { AlertDialog, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import DeleteAlertDialogContent from "./delete-alert-dialog-content";
 
 type ProductGridProps = {

@@ -14,12 +14,8 @@ import ProductDetailsForm from "@/app/dashboard/_components/forms/product-detail
 import CountryDiscountForm from "@/app/dashboard/_components/forms/country-discount-form";
 
 type EditProductPageProps = {
-  params: {
-    productId: string;
-  };
-  searchParams: {
-    tab?: string;
-  };
+  params: Promise<{ productId: string }>;
+  searchParams: Promise<{ tab?: string }>;
 };
 
 const EditProductPage: React.FC<EditProductPageProps> = async ({
