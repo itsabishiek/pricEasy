@@ -38,7 +38,9 @@ const Navbar: React.FC<NavbarProps> = () => {
             </SignUpButton>
           </SignedOut>
 
-          <ModeToggle />
+          <div className="hidden md:flex">
+            <ModeToggle />
+          </div>
         </div>
       </nav>
     </header>

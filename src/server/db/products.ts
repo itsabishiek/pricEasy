@@ -3,6 +3,7 @@ import { ProductCustomizationTable, ProductTable } from "@/drizzle/schema";
 import {
   CACHE_TAGS,
   dbCache,
+  getIdTag,
   getUserTag,
   revalidateDbCache,
 } from "@/lib/cache";
@@ -24,6 +25,21 @@ export function getProductsInternal(
     where: ({ clerkUserId }, { eq }) => eq(clerkUserId, userId),
     orderBy: ({ createdAt }, { desc }) => desc(createdAt),
     limit,
+  });
+}
+
+export function getProduct(userId: string, productId: string) {
+  const cacheFn = dbCache(getProductInternal, {
+    tags: [getIdTag(productId, CACHE_TAGS.products)],
+  });
+
+  return cacheFn(userId, productId);
+}
+
+export function getProductInternal(userId: string, productId: string) {
+  return db.query.ProductTable.findFirst({
+    where: ({ clerkUserId, id }, { eq, and }) =>
+      and(eq(clerkUserId, userId), eq(id, productId)),
   });
 }
 
@@ -53,6 +69,28 @@ export async function createProduct(data: typeof ProductTable.$inferInsert) {
   });
 
   return newProduct;
+}
+
+export async function updateProduct(
+  data: Partial<typeof ProductTable.$inferInsert>,
+  { userId, productId }: { userId: string; productId: string }
+) {
+  const { rowCount } = await db
+    .update(ProductTable)
+    .set(data)
+    .where(
+      and(eq(ProductTable.clerkUserId, userId), eq(ProductTable.id, productId))
+    );
+
+  if (rowCount > 0) {
+    revalidateDbCache({
+      tag: CACHE_TAGS.products,
+      userId,
+      id: productId,
+    });
+  }
+
+  return rowCount > 0;
 }
 
 export async function deleteProduct(productId: string, userId: string) {

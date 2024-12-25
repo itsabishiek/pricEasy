@@ -17,24 +17,35 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { productDetailsSchema } from "@/schemas/products";
-import { createProduct } from "@/server/actions/products";
+import { createProduct, updateProduct } from "@/server/actions/products";
 import { useToast } from "@/hooks/use-toast";
 
-type ProductDetailsFormProps = {};
+type ProductDetailsFormProps = {
+  product?: {
+    id: string;
+    name: string;
+    description: string | null;
+    url: string;
+  };
+};
 
-const ProductDetailsForm: React.FC<ProductDetailsFormProps> = () => {
+const ProductDetailsForm: React.FC<ProductDetailsFormProps> = ({ product }) => {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof productDetailsSchema>>({
     resolver: zodResolver(productDetailsSchema),
-    defaultValues: {
-      name: "",
-      url: "",
-      description: "",
-    },
+    defaultValues: product
+      ? { ...product, description: product.description ?? "" }
+      : {
+          name: "",
+          url: "",
+          description: "",
+        },
   });
 
   const onSubmit = async (values: z.infer<typeof productDetailsSchema>) => {
-    const data = await createProduct(values);
+    const action =
+      product == null ? createProduct : updateProduct.bind(null, product.id);
+    const data = await action(values);
 
     if (data?.message) {
       toast({
@@ -108,7 +119,7 @@ const ProductDetailsForm: React.FC<ProductDetailsFormProps> = () => {
             size="lg"
             type="submit"
           >
-            Create
+            {product == null ? "Create" : "Save"}
           </Button>
         </div>
       </form>

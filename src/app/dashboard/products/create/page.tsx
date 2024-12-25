@@ -5,10 +5,10 @@ type CreatePageProps = {};
 
 const CreatePage: React.FC<CreatePageProps> = () => {
   return (
-    <div className="">
+    <div className="max-w-screen-md w-full mx-auto">
       <h1 className="text-2xl font-semibold">Create Product</h1>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <ProductDetailsForm />
       </div>
     </div>

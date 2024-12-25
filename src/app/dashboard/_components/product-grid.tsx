@@ -75,7 +75,9 @@ const ProductCard = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent className="dark:border-input">
                       <DropdownMenuItem asChild>
-                        <Link href={`/dashboard/products/${id}/edit`}>
+                        <Link
+                          href={`/dashboard/products/${id}/edit?tab=details`}
+                        >
                           Edit
                         </Link>
                       </DropdownMenuItem>

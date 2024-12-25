@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       dynamic: 0,
     },
   },
+  images: {
+    remotePatterns: [{ hostname: "img.clerk.com" }],
+  },
 };
 
 export default nextConfig;

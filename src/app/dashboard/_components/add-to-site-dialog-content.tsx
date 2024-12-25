@@ -61,7 +61,7 @@ const AddToSiteDialogContent: React.FC<AddToSiteDialogContentProps> = ({
         <DialogClose asChild>
           <Button variant="outline" asChild>
             <Link
-              href={`/dashboard/products/${productId}/edit?tab=add-to-site`}
+              href={`/dashboard/products/${productId}/edit?tab=customization`}
             >
               Customise
             </Link>
