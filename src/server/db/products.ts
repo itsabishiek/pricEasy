@@ -53,7 +53,7 @@ export async function getProductCountryGroups(
   productId: string,
   userId: string
 ) {
-  const cacheFn = dbCache(getProductCountryGroupsInternale, {
+  const cacheFn = dbCache(getProductCountryGroupsInternal, {
     tags: [
       getIdTag(productId, CACHE_TAGS.products),
       getGlobalTag(CACHE_TAGS.countries),
@@ -64,7 +64,7 @@ export async function getProductCountryGroups(
   return cacheFn(productId, userId);
 }
 
-export async function getProductCountryGroupsInternale(
+export async function getProductCountryGroupsInternal(
   productId: string,
   userId: string
 ) {
@@ -99,6 +99,32 @@ export async function getProductCountryGroupsInternale(
       discount: group.countryGroupDiscounts.at(0),
     };
   });
+}
+
+export async function getProductCustomization(
+  productId: string,
+  userId: string
+) {
+  const cacheFn = dbCache(getProductCustomizationInternal, {
+    tags: [getIdTag(productId, CACHE_TAGS.products)],
+  });
+
+  return cacheFn(productId, userId);
+}
+
+export async function getProductCustomizationInternal(
+  productId: string,
+  userId: string
+) {
+  const data = await db.query.ProductTable.findFirst({
+    where: ({ id, clerkUserId }, { and, eq }) =>
+      and(eq(id, productId), eq(clerkUserId, userId)),
+    with: {
+      productCustomization: true,
+    },
+  });
+
+  return data?.productCustomization;
 }
 
 export async function createProduct(data: typeof ProductTable.$inferInsert) {
@@ -149,6 +175,25 @@ export async function updateProduct(
   }
 
   return rowCount > 0;
+}
+
+export async function updateProductCustomization(
+  data: Partial<typeof ProductCustomizationTable.$inferInsert>,
+  { productId, userId }: { productId: string; userId: string }
+) {
+  const product = await getProduct(userId, productId);
+  if (product == null) return;
+
+  await db
+    .update(ProductCustomizationTable)
+    .set(data)
+    .where(eq(ProductCustomizationTable.productId, productId));
+
+  revalidateDbCache({
+    tag: CACHE_TAGS.products,
+    userId,
+    id: productId,
+  });
 }
 
 export async function deleteProduct(productId: string, userId: string) {

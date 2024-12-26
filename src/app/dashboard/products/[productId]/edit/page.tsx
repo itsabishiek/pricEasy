@@ -1,7 +1,11 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { auth } from "@clerk/nextjs/server";
-import { getProduct, getProductCountryGroups } from "@/server/db/products";
+import {
+  getProduct,
+  getProductCountryGroups,
+  getProductCustomization,
+} from "@/server/db/products";
 import { notFound } from "next/navigation";
 import {
   Card,
@@ -12,6 +16,8 @@ import {
 } from "@/components/ui/card";
 import ProductDetailsForm from "@/app/dashboard/_components/forms/product-details-form";
 import CountryDiscountForm from "@/app/dashboard/_components/forms/country-discount-form";
+import ProductCustomizationForm from "@/app/dashboard/_components/forms/product-customization-form";
+import { canCustomizeBanner, canRemoveBranding } from "@/server/permissions";
 
 type EditProductPageProps = {
   params: Promise<{ productId: string }>;
@@ -115,13 +121,16 @@ const CountriesTab = async ({
   );
 };
 
-const CustomizationTab = ({
+const CustomizationTab = async ({
   productId,
   userId,
 }: {
   productId: string;
   userId: string;
 }) => {
+  const customization = await getProductCustomization(productId, userId);
+  if (!customization) return notFound();
+
   return (
     <Card className="dark:border-input">
       <CardHeader>
@@ -132,7 +141,11 @@ const CustomizationTab = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {/* <ProductDetailsForm product={product} /> */}
+        <ProductCustomizationForm
+          customization={customization}
+          canRemoveBranding={await canRemoveBranding(userId)}
+          canCustomizeBanner={await canCustomizeBanner(userId)}
+        />
       </CardContent>
     </Card>
   );
