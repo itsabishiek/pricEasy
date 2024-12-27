@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 import Banner from "@/components/banner";
 import { updateProductCustomization } from "@/server/actions/products";
 import { useToast } from "@/hooks/use-toast";
+import NoPermissionCard from "@/components/no-permission-card";
 
 type ProductCustomizationFormProps = {
   customization: {
@@ -85,6 +86,12 @@ const ProductCustomizationForm: React.FC<ProductCustomizationFormProps> = ({
           }}
         />
       </div>
+
+      {!canCustomizeBanner && (
+        <div className="mt-5">
+          <NoPermissionCard />
+        </div>
+      )}
 
       <Form {...form}>
         <form

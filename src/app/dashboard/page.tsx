@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import ProductGrid from "./_components/product-grid";
+import { canCreateProduct } from "@/server/permissions";
 
 type DashboardPageProps = {};
 
@@ -14,6 +15,7 @@ const DashboardPage: React.FC<DashboardPageProps> = async () => {
   if (userId === null) return redirectToSignIn();
 
   const products = await getProducts(userId, { limit: 6 });
+  const canAddProduct = await canCreateProduct(userId);
 
   return (
     <div className="">
